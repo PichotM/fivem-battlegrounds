@@ -14,7 +14,7 @@ https://streamable.com/0sszx
 ![](https://a.uguu.se/nWsNIZFa0NRm_unknown.png)
 
 - The first 'map'
-![](https://i.imgur.com/rfW9PXb.png)
+![](https://i.imgur.com/8Cv1TcO.png)
 
 # SQL Setup:
 This gamemode uses only one SQL table.
