@@ -1,7 +1,22 @@
 # fivem-battlegrounds
-FIVEM BATTLEGROUNDS - CONTRIBUTE
 
-SQL Setup:
+The gamemode should work, since it has been properly tested.
+But the onesync version might be still buggy.
+
+Here some previews:
+- How the zone shrinking
+https://streamable.com/0sszx
+
+- In the plane
+![](https://i.imgur.com/EImiZoF.jpg)
+
+- HUD
+![](https://a.uguu.se/nWsNIZFa0NRm_unknown.png)
+
+- The first 'map'
+![](https://i.imgur.com/rfW9PXb.png)
+
+# SQL Setup:
 This gamemode uses only one SQL table.
 
 ```sql
@@ -18,4 +33,4 @@ CREATE TABLE `br_players` (
 ```
 
 It currently supports https://github.com/GHMatti/ghmattimysql.
-If you want to use another mysql resource you just have to modify 3 functions at the top of sv_init.lua
+If you want to use another mysql resource you just have to modify 3 functions at the top of sv_init.lua.
