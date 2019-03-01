@@ -76,11 +76,13 @@ function BR:ResetGame()
 		NetworkSetInSpectatorMode(false)
 	end
 
-	for k,v in pairs(self.Blips) do
-		if DoesBlipExist(v) then RemoveBlip(v) end
-	end
+	if self.ShowBlips then
+		for k,v in pairs(self.Blips) do
+			if DoesBlipExist(v) then RemoveBlip(v) end
+		end
 
-	self.Blips = {}
+		self.Blips = {}
+	end
 
 	for k,v in pairs(allPickups) do
 		if DoesPickupExist(v.handle) then RemovePickup(v.handle) end
@@ -615,11 +617,13 @@ AddEventHandler("BR:Event", function(eventID, _tbl)
 	elseif eventID == 8 and allPickups[_tbl.index] then
 		local pickup = allPickups[_tbl.index]
 		if pickup then
-			for k,v in pairs(blips) do
-				if DoesBlipExist(v) and GetDistanceBetweenCoords(GetBlipCoords(v), pickup.pos) <= 1 then
-					RemoveBlip(v)
-					table.remove(blips, k)
-					break
+			if BR.ShowBlips then
+				for k,v in pairs(blips) do
+					if DoesBlipExist(v) and GetDistanceBetweenCoords(GetBlipCoords(v), pickup.pos) <= 1 then
+						RemoveBlip(v)
+						table.remove(blips, k)
+						break
+					end
 				end
 			end
 
