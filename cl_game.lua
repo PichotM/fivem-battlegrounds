@@ -449,7 +449,8 @@ end
 
 function BR:EntityDamage(victimEntity, attackEntity, _, fatalBool, weaponUsed, _, _, _, _, _, entityType)
 	local ped = GetPlayerPed(-1)
-	if ped and ped == victimEntity and fatalBool then
+	print(fatalBool)
+	if ped and ped == victimEntity and fatalBool == 1 then
 		local killer = IsPedAPlayer(attackEntity) and attackEntity or GetEntityType(attackEntity) == 2 and IsPedAPlayer(GetPedInVehicleSeat(attackEntity, -1)) and GetPedInVehicleSeat(attackEntity, -1)
 		killer = killer and NetworkGetPlayerIndexFromPed(killer)
 		if BR.Status == 1 and BR.Players[PlayerId()] then TriggerServerEvent("BR:SendToServer", 2, killer and GetPlayerServerId(killer) or false) end
