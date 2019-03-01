@@ -1,33 +1,39 @@
+local IS_SERVER = IsDuplicityVersion()
+
 BR = BR or {}
 
 ENABLE_DEBUG = true
+if not IS_SERVER then
+	BR.Blips = {}
+	BR.FormerZone = false
+	BR.JumpTime = 60
+else
+	BR.StartZone = 120
+	BR.IntervalZone = 90
+end
 
-BR.Blips = {}
-BR.Status = 0
 --[[
-0 -> WAITING GAME START.
-1 -> IN PLANE.
-2 -> CAN LEAVE PLANE.
-
+	0 -> WAITING GAME START.
+	1 -> IN PLANE.
+	2 -> CAN LEAVE PLANE.
 ]]--
+
+BR.Status = 0
+
 BR.StartTime = 0
 BR.PlaneNet = 0
 BR.Players = {}
 BR.Host = 0
 BR.Zone = false
-BR.FormerZone = false
 BR.ZoneRadius = 0.0
 BR.Map = false
 BR.Maps = {}
 
 BR.WarmUP = 5
-BR.StartZone = 120
-BR.IntervalZone = 90
 BR.GameTime = 60 * 15
-BR.MinPlayers = 3
-BR.JumpTime = 60
+BR.MinPlayers = 1
 
-local IS_SERVER = IsDuplicityVersion()
+
 function ChatNotif(a, b, c, color)
 	if IS_SERVER then
 		TriggerClientEvent('chatMessage', a, c or 'GTALife', d or {18, 197, 101}, b or '')
