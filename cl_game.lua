@@ -5,6 +5,7 @@ local camPos = {
 }
 local planeModel = "cargoplane"
 local pilotModel = "s_m_y_pilot_01"
+local blips = {}
 local allSeats = { { pos = vector3(2.75, 11.1, -3.65), rot = 90.0 }, { pos = vector3(-2.75, 11.1, -3.65), rot = -90.0 }, { pos = vector3(2.75, 10.6, -3.65), rot = 90.0 },	{ pos = vector3(-2.75, 10.6, -3.65), rot = -90.0 },	{ pos = vector3(2.75, 10.1, -3.65), rot = 90.0 },	{ pos = vector3(-2.75, 10.1, -3.65), rot = -90.0 },	{ pos = vector3(2.75, 9.6, -3.65), rot = 90.0 },	{ pos = vector3(-2.75, 9.6, -3.65), rot = -90.0 },	{ pos = vector3(2.75, 3.1, -3.65), rot = 90.0 },	{ pos = vector3(-2.75, 3.1, -3.65), rot = -90.0 },	{ pos = vector3(2.75, 2.6, -3.65), rot = 90.0 },	{ pos = vector3(-2.75, 2.6, -3.65), rot = -90.0 },	{ pos = vector3(2.75, 2.1, -3.65), rot = 90.0 },	{ pos = vector3(-2.75, 2.1, -3.65), rot = -90.0 },	{ pos = vector3(2.75, 1.6, -3.65), rot = 90.0 },	{ pos = vector3(-2.75, 1.6, -3.65), rot = -90.0 },	{ pos = vector3(2.75, 1.1, -3.65), rot = 90.0 },	{ pos = vector3(-2.75, 1.1, -3.65), rot = -90.0 },	{ pos = vector3(2.75, 0.6, -3.65), rot = 90.0 },	{ pos = vector3(-2.75, 0.6, -3.65), rot = -90.0 },	{ pos = vector3(2.75, 0.1, -3.65), rot = 90.0 },	{ pos = vector3(-2.75, 0.1, -3.65), rot = -90.0 },	{ pos = vector3(2.75, -0.4, -3.65), rot = 90.0 },	{ pos = vector3(-2.75, -0.4, -3.65), rot = -90.0 },	{ pos = vector3(2.75, -0.9, -3.65), rot = 90.0 },	{ pos = vector3(-2.75, -0.9, -3.65), rot = -90.0 },	{ pos = vector3(2.75, -1.4, -3.65), rot = 90.0 },	{ pos = vector3(-2.75, -1.4, -3.65), rot = -90.0 },	{ pos = vector3(2.75, -1.9, -3.65), rot = 90.0 },	{ pos = vector3(-2.75, -1.9, -3.65), rot = -90.0 },	{ pos = vector3(2.75, -2.4, -3.65), rot = 90.0 },	{ pos = vector3(-2.75, -2.4, -3.65), rot = -90.0 },	{ pos = vector3(2.75, -2.9, -3.65), rot = 90.0 },	{ pos = vector3(-2.75, -2.9, -3.65), rot = -90.0 },	{ pos = vector3(2.75, -3.4, -3.65), rot = 90.0 },	{ pos = vector3(-2.75, -3.4, -3.65), rot = -90.0 },	{ pos = vector3(2.75, -3.9, -3.65), rot = 90.0 },	{ pos = vector3(-2.75, -3.9, -3.65), rot = -90.0 },	{ pos = vector3(2.75, -4.4, -3.65), rot = 90.0 },	{ pos = vector3(-2.75, -4.4, -3.65), rot = -90.0 },	{ pos = vector3(2.75, -4.9, -3.65), rot = 90.0 },	{ pos = vector3(-2.75, -4.9, -3.65), rot = -90.0 },	{ pos = vector3(2.75, -5.4, -3.65), rot = 90.0 },	{ pos = vector3(-2.75, -5.4, -3.65), rot = -90.0 },	{ pos = vector3(2.75, -5.9, -3.65), rot = 90.0 },	{ pos = vector3(-2.75, -5.9, -3.65), rot = -90.0 },	{ pos = vector3(2.75, -6.4, -3.65), rot = 90.0 },	{ pos = vector3(-2.75, -6.4, -3.65), rot = -90.0 },	{ pos = vector3(2.75, -6.9, -3.65), rot = 90.0 },	{ pos = vector3(-2.75, -6.9, -3.65), rot = -90.0 },	{ pos = vector3(2.75, -7.4, -3.65), rot = 90.0 },	{ pos = vector3(-2.75, -7.4, -3.65), rot = -90.0 },	{ pos = vector3(2.75, -7.9, -3.65), rot = 90.0 },	{ pos = vector3(-2.75, -7.9, -3.65), rot = -90.0 },	{ pos = vector3(2.75, -8.4, -3.65), rot = 90.0 },	{ pos = vector3(-2.75, -8.4, -3.65), rot = -90.0 },	{ pos = vector3(2.75, -8.9, -3.65), rot = 90.0 },	{ pos = vector3(-2.75, -8.9, -3.65), rot = -90.0 },	{ pos = vector3(2.75, -9.4, -3.65), rot = 90.0 },	{ pos = vector3(-2.75, -9.4, -3.65), rot = -90.0 },	{ pos = vector3(2.75, -9.9, -3.65), rot = 90.0 },	{ pos = vector3(-2.75, -9.9, -3.65), rot = -90.0 },	{ pos = vector3(2.75, -10.4, -3.65), rot = 90.0 },	{ pos = vector3(-2.75, -10.4, -3.65), rot = -90.0 },}
 local currentCam = 1
 local allPickups = {}
@@ -423,11 +424,15 @@ end
 
 local availableWeapons = {"weapon_doubleaction","WEAPON_PISTOL50","WEAPON_FLAREGUN","WEAPON_MICROSMG","WEAPON_SMG","WEAPON_ASSAULTRIFLE","WEAPON_CARBINERIFLE","WEAPON_GUSENBERG","WEAPON_PUMPSHOTGUN"}
 function BR:PlayerCollectedPickup(a, pickupHash, b, c, d)
-	BR:GiveWeapon(GetPlayerPed(-1), GetHashKey(availableWeapons[math.random(1, #availableWeapons)]))
+	local pickupIndex
 	for k,v in pairs(allPickups) do
 		if a == v then
-			table.remove(allPickups, k)
+			pickupIndex = k
 		end
+	end
+
+	if pickupIndex then
+		TriggerServerEvent("BR:SendToServer", 3, { i = pickupIndex, pos = VectorToTable(GetPickupCoords(a)) })
 	end
 end
 
@@ -454,9 +459,19 @@ local boats = {"seashark", "dinghy2", "dinghy3", "jetmax", "suntrap"}
 
 function BR:SetupMap(map)
 	RequestAndWaitModel("prop_time_capsule_01")
+
+	local createBlip = self.ShowBlips
 	for k,v in pairs(map.pickups) do
 		if math.random(1, 4) ~= 4 then
 			local pickup = CreatePickupRotate(GetHashKey("PICKUP_MONEY_PAPER_BAG"), v[1], v[2], v[3], vector3(-72.0, 0.0, 42.0), 512, -1, 2, 1)
+			if createBlip then
+				local blip = AddBlipForCoord(v[1], v[2], v[3])
+				SetBlipSprite(blip, 478)
+				SetBlipColour(blip, 0)
+				SetBlipAsShortRange(blip, true)
+				SetBlipDisplay(blip, 5)
+				blips[#blips + 1] = blip
+			end
 			table.insert(allPickups, pickup)
 		end
 	end
@@ -490,6 +505,7 @@ end
 
 RegisterNetEvent("BR:Event")
 AddEventHandler("BR:Event", function(eventID, _tbl)
+	print(eventID, json.encode(_tbl))
 	if eventID == 1 then
 		local map = LoadResourceFile(GetCurrentResourceName(), "maps/" .. _tbl .. ".json")
 		map = map and json.decode(map)
@@ -589,6 +605,27 @@ AddEventHandler("BR:Event", function(eventID, _tbl)
 
 		BR:ResetGame()
 		BR.Spawn:SpawnPed()
+	elseif eventID == 8 and allPickups[_tbl.index] then
+		local pickup = allPickups[_tbl.index]
+		if pickup and DoesPickupExist(pickup) then
+			local pickupPos = _tbl.pos
+			print(pickupPos)
+			for k,v in pairs(blips) do
+				if DoesBlipExist(v) and GetDistanceBetweenCoords(GetBlipCoords(v), pickupPos.x, pickupPos.y, pickupPos.z) <= 1 then
+					print('here ?.')
+					RemoveBlip(v)
+					table.remove(blips, k)
+					break
+				end
+			end
+			RemovePickup(pickup)
+		end
+
+		if GetPlayerFromServerId(_tbl.receiver) == PlayerId() then
+			BR:GiveWeapon(GetPlayerPed(-1), GetHashKey(availableWeapons[math.random(1, #availableWeapons)]))
+		end
+
+		table.remove(allPickups, _tbl.index)
 	end
 end)
 

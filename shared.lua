@@ -7,6 +7,7 @@ if not IS_SERVER then
 	BR.Blips = {}
 	BR.FormerZone = false
 	BR.JumpTime = 60
+	BR.ShowBlips = true
 else
 	BR.StartZone = 120
 	BR.IntervalZone = 90
@@ -40,6 +41,10 @@ function ChatNotif(a, b, c, color)
 	else
 		TriggerEvent('chatMessage', b or 'GTALife', c or {18, 197, 101}, a or '.')
 	end
+end
+
+function VectorToTable(vec)
+	return { x = vec.x, y = vec.y, z = vec.z }
 end
 
 local function Vmag(vector)

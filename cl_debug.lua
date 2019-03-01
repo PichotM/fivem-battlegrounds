@@ -195,7 +195,6 @@ function DrawNiceText(x, y, scale, text, f, c, n, color)
 end
 
 AddEventHandler('gameEventTriggered', function(Name, Arguments)
-	-- print(Name .. " - " .. json.encode(Arguments))
 	Name = Name:gsub("CEventNetwork", "")
 	if BR[Name] then
 		BR[Name](BR, table.unpack(Arguments))

@@ -10,9 +10,6 @@ BR.Pickups = {}
 -- Local stuff
 local _time
 local connectedPlayers = {}
-local function VectorToTable(vec)
-	return { x = vec.x, y = vec.y, z = vec.z }
-end
 
 function SQL_Query(...)
 	return MySQL.Sync.execute(...)
@@ -241,6 +238,8 @@ function BR:BridgeHandler(intSource, id, _tbl)
 		end
 
 		self:PlayerKilled(intSource, _tbl)
+	elseif id == 3 then
+		TriggerClientEvent("BR:Event", -1, 8, { index = _tbl.i, pos = _tbl.pos, receiver = intSource }) -- workaround *wait* server sided entities
 	end
 end
 
