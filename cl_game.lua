@@ -87,6 +87,8 @@ function BR:ResetGame()
 	for k,v in pairs(allPickups) do
 		if DoesPickupExist(v.handle) then RemovePickup(v.handle) end
 	end
+
+	RemoveAllPedWeapons(GetPlayerPed(-1))
 	allPickups = {}
 end
 
