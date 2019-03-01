@@ -350,6 +350,7 @@ function BR:OnGameTick(ped)
 		end
 		HideHudAndRadarThisFrame()
 
+		DisableControlAction(0, 22, true)
 		DisableControlAction(0, 23, true)
 		DisableControlAction(0, 49, true)
 		DisableControlAction(0, 75, true)
