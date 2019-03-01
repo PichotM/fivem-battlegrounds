@@ -218,7 +218,7 @@ function BR:PlaneTick(plane)
 	DisableControlAction(0, 51, true)
 	ShowHelp("Press ~INPUT_CONTEXT~ to use another view.~n~Press ~INPUT_ENTER~ to jump." .. (camActive and "~n~~n~~INPUT_CELLPHONE_LEFT~ ~INPUT_CELLPHONE_RIGHT~ to change the camera." or ""))
 
-	if camActive then
+	if camActive and DoesEntityExist(plane) then
 		if camRotation then
 			SetCamRot(viewCam, camRotation.x, camRotation.y, GetEntityHeading(plane) - camRotation.z, 2)
 		end
@@ -252,7 +252,7 @@ function BR:PlaneTick(plane)
 	DrawHUDRect(0.975 - paddingX - 0.005, topRightY, "JUMP", SecondsToClock(jumpTimer))
 
 	-- Jump system
-	if InPlane and (IsControlJustPressed(0, 23) or jumpTimer <= 5 or IsPedInParachuteFreeFall(ped)) then
+	if InPlane and (IsControlJustPressed(0, 23) or jumpTimer <= 5 or not DoesEntityExist(plane)) then
 		InPlane = false
 
 		DetachEntity(ped, 0, 1)
@@ -351,7 +351,7 @@ function BR:OnGameTick(ped)
 		HideHudAndRadarThisFrame()
 	else
 		local plane = InPlane and NetworkDoesNetworkIdExist(self.PlaneNet) and NetworkGetEntityFromNetworkId(self.PlaneNet)
-		if self.Status == 1 and plane and DoesEntityExist(plane) then
+		if self.Status == 1 and InPlane then
 			self:PlaneTick(plane)
 		end
 
