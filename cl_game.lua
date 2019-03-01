@@ -14,6 +14,8 @@ local specPlayer = 0
 local viewCam
 local driver
 
+local topRightY = 0.07
+
 RegisterNetEvent("BR:UpdateData")
 AddEventHandler("BR:UpdateData", function(varName, varValue)
 	print("RESET GAME 2")
@@ -241,10 +243,10 @@ function BR:PlaneTick(plane)
 	end
 
 	local playerCount = tableCount(self.Players)
-	local paddingX = DrawHUDRect(0.975, 0.04, "ALIVE", tostring(playerCount))
+	local paddingX = DrawHUDRect(0.975, topRightY, "ALIVE", tostring(playerCount))
 
 	local jumpTimer = math.max(0, math.floor((self.StartTime + self.JumpTime * 1000 - GetGameTimer()) / 1000))
-	DrawHUDRect(0.975 - paddingX - 0.005, 0.04, "JUMP", SecondsToClock(jumpTimer))
+	DrawHUDRect(0.975 - paddingX - 0.005, topRightY, "JUMP", SecondsToClock(jumpTimer))
 
 	-- Jump system
 	if InPlane and (IsControlJustPressed(0, 23) or jumpTimer <= 0) then
@@ -262,9 +264,9 @@ end
 
 function BR:GameTick(ped)
 	local playerCount = tableCount(self.Players)
-	local paddingX = DrawHUDRect(0.975, 0.04, "ALIVE", tostring(playerCount))
+	local paddingX = DrawHUDRect(0.975, topRightY, "ALIVE", tostring(playerCount))
 	if not InPlane then
-		paddingX = paddingX + DrawHUDRect(0.975 - paddingX - 0.005, 0.04, "KILL", tostring(killCount))
+		paddingX = paddingX + DrawHUDRect(0.975 - paddingX - 0.005, topRightY, "KILL", tostring(killCount))
 	end
 
 	DrawHUDRect(0.24, 0.955, "END", SecondsToClock(((self.StartTime + self.GameTime * 1000) - GetGameTimer()) / 1000))
@@ -324,9 +326,9 @@ end
 function BR:OnGameTick(ped)
 	if self.Status == 0 then
 		local paddingX, allPlayers = 0.0, NetworkGetNumConnectedPlayers()
-		paddingX = DrawHUDRect(0.975, 0.04, "PLAYERS", tostring(allPlayers))
+		paddingX = DrawHUDRect(0.975, topRightY, "PLAYERS", tostring(allPlayers))
 		if self.StartTime and self.StartTime ~= 0 then
-			DrawHUDRect(0.975 - paddingX - 0.005, 0.04, "START", "00:" .. formatTwoDigitNumbers(math.max(0, math.floor((self.StartTime + self.WarmUP * 1000 - GetGameTimer()) / 1000))))
+			DrawHUDRect(0.975 - paddingX - 0.005, topRightY, "START", "00:" .. formatTwoDigitNumbers(math.max(0, math.floor((self.StartTime + self.WarmUP * 1000 - GetGameTimer()) / 1000))))
 		end
 
 		if allPlayers >= self.MinPlayers then
