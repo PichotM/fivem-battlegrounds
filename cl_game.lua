@@ -250,7 +250,7 @@ function BR:PlaneTick(plane)
 	DrawHUDRect(0.975 - paddingX - 0.005, topRightY, "JUMP", SecondsToClock(jumpTimer))
 
 	-- Jump system
-	if InPlane and (IsControlJustPressed(0, 23) or jumpTimer <= 5) then
+	if InPlane and (IsControlJustPressed(0, 23) or jumpTimer <= 5 or IsPedInParachuteFreeFall(ped)) then
 		InPlane = false
 
 		DetachEntity(ped, 0, 1)
@@ -258,8 +258,8 @@ function BR:PlaneTick(plane)
 		RenderScriptCams(0, 0, 0, 1, 0)
 		BR.Spawn:SpawnPlayer(ped)
 
-		SetPedGadget(GetPlayerPed(-1), GetHashKey("GADGET_PARACHUTE"), true)
-		GiveDelayedWeaponToPed(GetPlayerPed(-1), GetHashKey("GADGET_PARACHUTE"), 1, 1)
+		SetPedGadget(ped, GetHashKey("GADGET_PARACHUTE"), true)
+		GiveWeaponToPed(ped, GetHashKey("GADGET_PARACHUTE"), 1, false, true)
 	end
 end
 
