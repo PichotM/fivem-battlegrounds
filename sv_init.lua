@@ -108,7 +108,6 @@ end
 function BR:PlayerKilled(intSource, intKiller)
 	if not self.Players[intSource] then return end
 	self.Players[intSource] = nil
-	print("KILLER -> " .. intKiller .. " ( " .. GetPlayerName(intKiller) .. " ) WHERE SOURCE -> " .. intSource)
 	TriggerClientEvent("BR:Event", -1, 4, { killed = intSource, killer = intKiller })
 	if intKiller and self.Players[intKiller] then
 		print('updated')
@@ -298,6 +297,7 @@ function BR:StartGame()
 	})
 end
 
+-- need to cache it.
 RegisterCommand("kill", function(intSource)
 	local killCount = SQL_QueryScalar("SELECT kills FROM br_players WHERE hex = @hex", { ["hex"] = GetPlayerIdentifiers(intSource)[1] })
 	ChatNotif(intSource, "Total kills: " .. (killCount or 0))
@@ -305,5 +305,25 @@ end)
 
 RegisterCommand("victory", function(intSource)
 	local topCount = SQL_QueryScalar("SELECT victory FROM br_players WHERE hex = @hex", { ["hex"] = GetPlayerIdentifiers(intSource)[1] })
-	ChatNotif(intSource, "Total TOP1: " .. (topCount or 0))
+	ChatNotif(intSource, "Total victories: " .. (topCount or 0))
+end)
+
+RegisterCommand("topkill", function(intSource)
+	local resultSQL, str = SQL_QueryResult("SELECT * FROM br_players ORDER BY kills DESC LIMIT 10"), ""
+	for k,v in pairs(resultSQL) do
+		str = str .. v.name .. " - " .. v.kills .. " players killed" .. (k == #resultSQL and "" or "\n")
+	end
+	ChatNotif(intSource, "Kill leaderboard:\n" .. str)
+end)
+
+RegisterCommand("topvictory", function(intSource)
+	local resultSQL, str = SQL_QueryResult("SELECT * FROM br_players ORDER BY victory DESC LIMIT 10"), ""
+	for k,v in pairs(resultSQL) do
+		str = str .. v.name .. " - " .. v.kills .. " victories" .. (k == #resultSQL and "" or "\n")
+	end
+	ChatNotif(intSource, "Victory leaderboard:\n" .. str)
+end)
+
+RegisterCommand("help", function(intSource)
+	ChatNotif(intSource, "Commands:\n/kill: shows your kill count\n/victory: shows your victory count\n/topkill: show the kill leaderboard\n/topvictory: show the victory leaderboard")
 end)
