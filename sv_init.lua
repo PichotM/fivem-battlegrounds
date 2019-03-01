@@ -325,5 +325,5 @@ RegisterCommand("topvictory", function(intSource)
 end)
 
 RegisterCommand("help", function(intSource)
-	ChatNotif(intSource, "Commands:\n/kill: shows your kill count\n/victory: shows your victory count\n/topkill: show the kill leaderboard\n/topvictory: show the victory leaderboard")
+	ChatNotif(intSource, "Commands:\n/kill: shows your kill count\n/victory: shows your victory count\n/topkill: show the kill leaderboard\n/topvictory: show the victory leaderboard\n\n/skin: change to another skin.\n/saveskin: save your skin.")
 end)
