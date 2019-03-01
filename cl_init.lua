@@ -22,6 +22,17 @@ function BR:Timer()
 	self:GameTimer(ped)
 end
 
+function GetPlayers()
+	local tbl = {}
+	for i = 0, 64 do
+		if NetworkIsPlayerActive(i) then
+			tbl[#tbl + 1] = i
+		end
+	end
+
+	return tbl
+end
+
 Citizen.CreateThread(function()
 	while true do
 		Citizen.Wait(0)

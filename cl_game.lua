@@ -335,7 +335,7 @@ end
 
 function BR:OnGameTick(ped)
 	if self.Status == 0 then
-		local paddingX, allPlayers = 0.0, NetworkGetNumConnectedPlayers()
+		local paddingX, allPlayers = 0.0, tableCount(GetPlayers())
 		paddingX = DrawHUDRect(0.975, topRightY, "PLAYERS", tostring(allPlayers))
 		if self.StartTime and self.StartTime ~= 0 then
 			DrawHUDRect(0.975 - paddingX - 0.005, topRightY, "START", "00:" .. formatTwoDigitNumbers(math.max(0, math.floor((self.StartTime + self.WarmUP * 1000 - GetGameTimer()) / 1000))))
