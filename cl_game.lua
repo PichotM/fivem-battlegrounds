@@ -332,9 +332,9 @@ function BR:OnGameTick(ped)
 		end
 
 		if allPlayers >= self.MinPlayers then
-			drawCenterText("There is enough players to start the game.")
+			ShowHelp("The game is going to start.")
 		else
-			drawCenterText("The game needs at least " .. self.MinPlayers .. " players to start the game.")
+			ShowHelp(string.format("We need at least ~b~%s players~w~ to start.", self.MinPlayers))
 		end
 		HideHudAndRadarThisFrame()
 	else
