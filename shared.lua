@@ -10,7 +10,7 @@ if not IS_SERVER then
 	BR.ShowBlips = true
 else
 	BR.StartZone = 120
-	BR.IntervalZone = 90
+	BR.IntervalZone = 120
 end
 
 --[[
@@ -29,8 +29,8 @@ BR.ZoneRadius = 0.0
 BR.Map = false
 BR.Maps = {}
 
-BR.WarmUP = 5
-BR.GameTime = 60 * 15
+BR.WarmUP = 30
+BR.GameTime = 60 * 18
 BR.MinPlayers = 2
 
 
