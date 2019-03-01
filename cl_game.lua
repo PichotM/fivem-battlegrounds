@@ -349,6 +349,10 @@ function BR:OnGameTick(ped)
 			ShowHelp(string.format("We need at least ~b~%s players~w~ to start.", self.MinPlayers))
 		end
 		HideHudAndRadarThisFrame()
+
+		DisableControlAction(0, 23, true)
+		DisableControlAction(0, 49, true)
+		DisableControlAction(0, 75, true)
 	else
 		local plane = InPlane and NetworkDoesNetworkIdExist(self.PlaneNet) and NetworkGetEntityFromNetworkId(self.PlaneNet)
 		if self.Status == 1 and InPlane then
