@@ -15,15 +15,31 @@ local function VectorToTable(vec)
 end
 
 function SQL_Query(...)
-	return exports.ghmattimysql:executeSync(...)
+	return MySQL.Sync.execute(...)
 end
 
 function SQL_QueryResult(...)
-	return exports.ghmattimysql:executeSync(...)
+	return MySQL.Sync.fetchAll(...)
 end
 
 function SQL_QueryScalar(...)
-	return exports.ghmattimysql:scalarSync(...)
+	return MySQL.Sync.fetchScalar(...)
+end
+
+function SQL_AQuery(...)
+	return MySQL.Async.execute(...)
+end
+
+function SQL_AQueryResult(...)
+	return MySQL.Async.fetchAll(...)
+end
+
+function SQL_AQueryScalar(...)
+	return MySQL.Async.fetchScalar(...)
+end
+
+function MySQL_Ready(...)
+	return MySQL.ready(...)
 end
 
 -- onesync
