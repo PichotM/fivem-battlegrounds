@@ -10,6 +10,7 @@ BR.Pickups = {}
 -- Local stuff
 local _time
 local connectedPlayers = {}
+local planePos
 
 function SQL_Query(...)
 	return MySQL.Sync.execute(...)
@@ -167,7 +168,10 @@ function BR:InternalTimer()
 			self:ResetGame()
 			self.Host = GetHostId()
 			self:SelectMap()
-			TriggerClientEvent("BR:Event", self.Host, 1, self.Map.id)
+
+			local centerVector = vector3(self.Map.center.x, self.Map.center.y, 800.0)
+			planePos = centerVector - GenerateCenterPoint(self.Map.radius or 3000.0, true)
+			TriggerClientEvent("BR:Event", self.Host, 1, { name = self.Map.id, planePos = planePos })
 			print("send to " .. self.Host .. " wait for plane.")
 
 			_time = GetGameTimer()
@@ -284,6 +288,7 @@ function BR:StartGame()
 	TriggerClientEvent("BR:Event", -1, 3, {
 		safeZone = VectorToTable(self.BaseZone),
 		radius = self.ZoneRadius,
+		planePos = planePos,
 		var = {
 			PlaneNet = BR.PlaneNet,
 			Status = BR.Status,

@@ -20,7 +20,6 @@ end
 ]]--
 
 BR.Status = 0
-
 BR.StartTime = 0
 BR.PlaneNet = 0
 BR.Players = {}
@@ -32,7 +31,7 @@ BR.Maps = {}
 
 BR.WarmUP = 5
 BR.GameTime = 60 * 15
-BR.MinPlayers = 1
+BR.MinPlayers = 2
 
 
 function ChatNotif(a, b, c, color)

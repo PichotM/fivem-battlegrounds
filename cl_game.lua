@@ -127,16 +127,15 @@ local function SeatInPlane(plane)
 	InPlane = true
 end
 
-local function CreateStartPlane(centerPos, centerRadius)
+local function CreateStartPlane(centerPos, planePos)
 	RequestAndWaitModel(planeModel)
 
 	local centerVector = vector3(centerPos.x, centerPos.y, 800.0)
-	local planePos = centerVector - GenerateCenterPoint(centerRadius or 3000.0, true)
 	local destPos = centerVector + (centerVector - planePos)
 
 	local heading = GetHeadingFromVector_2d(destPos.x - planePos.x, destPos.y - planePos.y)
 
-	local planeEntity = CreateVehicle(GetHashKey(planeModel), planePos, heading, 1, 0)
+	local planeEntity = CreateVehicle(GetHashKey(planeModel), planePos, heading, true, 0)
 	SetModelAsNoLongerNeeded(GetHashKey(planeModel))
 	SetEntityInvincible(planeEntity, true)
 	SetVehicleEngineOn(planeEntity, 1, 1, 0)
@@ -148,7 +147,7 @@ local function CreateStartPlane(centerPos, centerRadius)
 	Citizen.InvokeNative(0xCFC8BE9A5E1FE575, planeEntity, 0)
 
 	RequestAndWaitModel(pilotModel)
-	driver = CreatePed(29, GetHashKey(pilotModel), GetEntityCoords(planeEntity), 0.0, 1, 0)
+	driver = CreatePed(29, GetHashKey(pilotModel), GetEntityCoords(planeEntity), 0.0, true, 0)
 	SetPedIntoVehicle(driver, planeEntity, -1)
 	SetEntityInvincible(driver, true)
 	SetBlockingOfNonTemporaryEvents(driver, true)
@@ -157,12 +156,8 @@ local function CreateStartPlane(centerPos, centerRadius)
 
 	TaskVehicleDriveToCoord(driver, planeEntity, destPos.x, destPos.y, destPos.z, 70.0, 0, GetEntityModel(planeEntity), 786603, 2.0, 2.0)
 
-	SetNetworkIdCanMigrate(PedToNet(driver), false)
 	SetNetworkIdCanMigrate(VehToNet(planeEntity), false)
-	NetworkRegisterEntityAsNetworked(planeEntity)
-	NetworkRegisterEntityAsNetworked(driver)
-	SetNetworkIdExistsOnAllMachines(VehToNet(planeEntity), true)
-	SetNetworkIdExistsOnAllMachines(VehToNet(driver), true)
+	SetNetworkIdCanMigrate(VehToNet(driver), false)
 
 	table.insert(BR.Blips, createCBlip(planePos, 1, 0, "Landing"))
 
@@ -514,13 +509,12 @@ end
 
 RegisterNetEvent("BR:Event")
 AddEventHandler("BR:Event", function(eventID, _tbl)
-	print(eventID, json.encode(_tbl))
 	if eventID == 1 then
-		local map = LoadResourceFile(GetCurrentResourceName(), "maps/" .. _tbl .. ".json")
+		local map = LoadResourceFile(GetCurrentResourceName(), "maps/" .. _tbl.name .. ".json")
 		map = map and json.decode(map)
 		if not map then return end
 
-		local netID = CreateStartPlane(map.center, map.radius)
+		local netID = CreateStartPlane(map.center, _tbl.planePos)
 		TriggerServerEvent("BR:SendToServer", 1, { PlaneNet = netID })
 	elseif eventID == 2 then
 		BR.Status = 0
@@ -536,20 +530,24 @@ AddEventHandler("BR:Event", function(eventID, _tbl)
 			end
 		end
 
+		local map = LoadResourceFile(GetCurrentResourceName(), "maps/" .. BR.Map .. ".json")
+		map = map and json.decode(map)
+		if not map then return end
+
 		print("planeNet " .. BR.PlaneNet)
 
-		local plane = NetworkDoesNetworkIdExist(BR.PlaneNet) and NetworkGetEntityFromNetworkId(BR.PlaneNet)
-		while not plane and not DoesEntityExist(plane) do
+		DoScreenFadeOut(1000)
+		Citizen.Wait(1000)
+
+		local ped, plane = GetPlayerPed(-1)
+		while not plane do
 			Citizen.Wait(100)
+			SetEntityCoords(ped, _tbl.planePos)
 			plane = NetworkDoesNetworkIdExist(BR.PlaneNet) and NetworkGetEntityFromNetworkId(BR.PlaneNet)
-			--print("wait plane")
 		end
 
 		print("plane foud")
 
-		local map = LoadResourceFile(GetCurrentResourceName(), "maps/" .. BR.Map .. ".json")
-		map = map and json.decode(map)
-		if not map then return end
 
 		BR.IsHost = tonumber(BR.Host) == GetPlayerServerId(PlayerId())
 		BR:SetupMap(map)
@@ -567,10 +565,13 @@ AddEventHandler("BR:Event", function(eventID, _tbl)
 		BR.StartTime = GetGameTimer()
 		PlayAudio("PUBG", { volume = 0.1 })
 
+		FreezeEntityPosition(GetPlayerPed(-1), false)
 
 		print(BR.PlaneNet .. " - " .. tostring(plane) .. " - " .. tostring(NetworkDoesNetworkIdExist(BR.PlaneNet)))
 		SeatInPlane(plane)
 		CreatePlaneCam(plane)
+
+		DoScreenFadeIn(1000)
 	elseif eventID == 4 then
 		local victim, killer, killerName = _tbl.killed, _tbl.killer
 		victim = GetPlayerFromServerId(victim)
