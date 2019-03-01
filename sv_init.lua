@@ -239,7 +239,7 @@ function BR:BridgeHandler(intSource, id, _tbl)
 
 		self:PlayerKilled(intSource, _tbl)
 	elseif id == 3 then
-		TriggerClientEvent("BR:Event", -1, 8, { index = _tbl.i, pos = _tbl.pos, receiver = intSource }) -- workaround *wait* server sided entities
+		TriggerClientEvent("BR:Event", -1, 8, { index = _tbl, receiver = intSource }) -- workaround *wait* server sided entities
 	end
 end
 

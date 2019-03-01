@@ -3,12 +3,15 @@ local camPos = {
 	{ pos = vector3(0.0, -75.0, 20.0), rot = vector3(-10.0, 0.0, 0.0) },
 	{ pos = vector3(0.0, 45.0, 0.0), rot = vector3(0.0, 0.0, 180.0) },
 }
+
 local planeModel = "cargoplane"
 local pilotModel = "s_m_y_pilot_01"
-local blips = {}
+local availableWeapons = {"weapon_doubleaction","WEAPON_PISTOL50","WEAPON_FLAREGUN","WEAPON_MICROSMG","WEAPON_SMG","WEAPON_ASSAULTRIFLE","WEAPON_CARBINERIFLE","WEAPON_GUSENBERG","WEAPON_PUMPSHOTGUN"}
 local allSeats = { { pos = vector3(2.75, 11.1, -3.65), rot = 90.0 }, { pos = vector3(-2.75, 11.1, -3.65), rot = -90.0 }, { pos = vector3(2.75, 10.6, -3.65), rot = 90.0 },	{ pos = vector3(-2.75, 10.6, -3.65), rot = -90.0 },	{ pos = vector3(2.75, 10.1, -3.65), rot = 90.0 },	{ pos = vector3(-2.75, 10.1, -3.65), rot = -90.0 },	{ pos = vector3(2.75, 9.6, -3.65), rot = 90.0 },	{ pos = vector3(-2.75, 9.6, -3.65), rot = -90.0 },	{ pos = vector3(2.75, 3.1, -3.65), rot = 90.0 },	{ pos = vector3(-2.75, 3.1, -3.65), rot = -90.0 },	{ pos = vector3(2.75, 2.6, -3.65), rot = 90.0 },	{ pos = vector3(-2.75, 2.6, -3.65), rot = -90.0 },	{ pos = vector3(2.75, 2.1, -3.65), rot = 90.0 },	{ pos = vector3(-2.75, 2.1, -3.65), rot = -90.0 },	{ pos = vector3(2.75, 1.6, -3.65), rot = 90.0 },	{ pos = vector3(-2.75, 1.6, -3.65), rot = -90.0 },	{ pos = vector3(2.75, 1.1, -3.65), rot = 90.0 },	{ pos = vector3(-2.75, 1.1, -3.65), rot = -90.0 },	{ pos = vector3(2.75, 0.6, -3.65), rot = 90.0 },	{ pos = vector3(-2.75, 0.6, -3.65), rot = -90.0 },	{ pos = vector3(2.75, 0.1, -3.65), rot = 90.0 },	{ pos = vector3(-2.75, 0.1, -3.65), rot = -90.0 },	{ pos = vector3(2.75, -0.4, -3.65), rot = 90.0 },	{ pos = vector3(-2.75, -0.4, -3.65), rot = -90.0 },	{ pos = vector3(2.75, -0.9, -3.65), rot = 90.0 },	{ pos = vector3(-2.75, -0.9, -3.65), rot = -90.0 },	{ pos = vector3(2.75, -1.4, -3.65), rot = 90.0 },	{ pos = vector3(-2.75, -1.4, -3.65), rot = -90.0 },	{ pos = vector3(2.75, -1.9, -3.65), rot = 90.0 },	{ pos = vector3(-2.75, -1.9, -3.65), rot = -90.0 },	{ pos = vector3(2.75, -2.4, -3.65), rot = 90.0 },	{ pos = vector3(-2.75, -2.4, -3.65), rot = -90.0 },	{ pos = vector3(2.75, -2.9, -3.65), rot = 90.0 },	{ pos = vector3(-2.75, -2.9, -3.65), rot = -90.0 },	{ pos = vector3(2.75, -3.4, -3.65), rot = 90.0 },	{ pos = vector3(-2.75, -3.4, -3.65), rot = -90.0 },	{ pos = vector3(2.75, -3.9, -3.65), rot = 90.0 },	{ pos = vector3(-2.75, -3.9, -3.65), rot = -90.0 },	{ pos = vector3(2.75, -4.4, -3.65), rot = 90.0 },	{ pos = vector3(-2.75, -4.4, -3.65), rot = -90.0 },	{ pos = vector3(2.75, -4.9, -3.65), rot = 90.0 },	{ pos = vector3(-2.75, -4.9, -3.65), rot = -90.0 },	{ pos = vector3(2.75, -5.4, -3.65), rot = 90.0 },	{ pos = vector3(-2.75, -5.4, -3.65), rot = -90.0 },	{ pos = vector3(2.75, -5.9, -3.65), rot = 90.0 },	{ pos = vector3(-2.75, -5.9, -3.65), rot = -90.0 },	{ pos = vector3(2.75, -6.4, -3.65), rot = 90.0 },	{ pos = vector3(-2.75, -6.4, -3.65), rot = -90.0 },	{ pos = vector3(2.75, -6.9, -3.65), rot = 90.0 },	{ pos = vector3(-2.75, -6.9, -3.65), rot = -90.0 },	{ pos = vector3(2.75, -7.4, -3.65), rot = 90.0 },	{ pos = vector3(-2.75, -7.4, -3.65), rot = -90.0 },	{ pos = vector3(2.75, -7.9, -3.65), rot = 90.0 },	{ pos = vector3(-2.75, -7.9, -3.65), rot = -90.0 },	{ pos = vector3(2.75, -8.4, -3.65), rot = 90.0 },	{ pos = vector3(-2.75, -8.4, -3.65), rot = -90.0 },	{ pos = vector3(2.75, -8.9, -3.65), rot = 90.0 },	{ pos = vector3(-2.75, -8.9, -3.65), rot = -90.0 },	{ pos = vector3(2.75, -9.4, -3.65), rot = 90.0 },	{ pos = vector3(-2.75, -9.4, -3.65), rot = -90.0 },	{ pos = vector3(2.75, -9.9, -3.65), rot = 90.0 },	{ pos = vector3(-2.75, -9.9, -3.65), rot = -90.0 },	{ pos = vector3(2.75, -10.4, -3.65), rot = 90.0 },	{ pos = vector3(-2.75, -10.4, -3.65), rot = -90.0 },}
 local currentCam = 1
 local allPickups = {}
+local blips = {}
+local closestPickups = {}
 local InPlane = false
 local killCount = 0
 local specPlayer = 0
@@ -80,7 +83,7 @@ function BR:ResetGame()
 	self.Blips = {}
 
 	for k,v in pairs(allPickups) do
-		if DoesPickupExist(v) then RemovePickup(v) end
+		if DoesPickupExist(v.handle) then RemovePickup(v.handle) end
 	end
 	allPickups = {}
 end
@@ -309,6 +312,15 @@ function BR:GameTick(ped)
 	if self.Status == 1 and IsEntityDead(GetPlayerPed(-1)) and self.Status > 0 then
 		self:EntityDamage(GetPlayerPed(-1), false, false, true)
 	end
+
+	for k,v in pairs(closestPickups) do
+		if DoesPickupExist(v.handle) and GetDistanceBetweenCoords(v.pos, plyPos) <= 0.5 then
+			RemovePickup(v.handle)
+			TriggerServerEvent("BR:SendToServer", 3, k)
+			closestPickups[k] = nil
+			break
+		end
+	end
 end
 
 local function FindNextPlayer(left)
@@ -343,6 +355,7 @@ function BR:OnGameTick(ped)
 		if self.Status == 1 and plane and DoesEntityExist(plane) then
 			self:PlaneTick(plane)
 		end
+
 		self:GameTick(ped)
 
 		if self.Status == 1 and IsPedInParachuteFreeFall(ped) and GetPedParachuteState(ped) <= 0 then
@@ -419,20 +432,14 @@ function BR:GameTimer(ped)
 		if not InPlane and (zoneRadius and GetDistanceBetweenCoords(plyPos, GetBlipCoords(self.Blips["safezone"])) > math.ceil(zoneRadius * 0.99333333333) or (self.FormerZone and GetDistanceBetweenCoords(plyPos, self.FormerZone) > math.ceil(self.FormerZoneRadius * 0.99333333333))) then
 			self:ApplyFireDamage(ped, 2)
 		end
-	end
-end
 
-local availableWeapons = {"weapon_doubleaction","WEAPON_PISTOL50","WEAPON_FLAREGUN","WEAPON_MICROSMG","WEAPON_SMG","WEAPON_ASSAULTRIFLE","WEAPON_CARBINERIFLE","WEAPON_GUSENBERG","WEAPON_PUMPSHOTGUN"}
-function BR:PlayerCollectedPickup(a, pickupHash, b, c, d)
-	local pickupIndex
-	for k,v in pairs(allPickups) do
-		if a == v then
-			pickupIndex = k
+		for k,v in pairs(allPickups) do
+			if GetDistanceBetweenCoords(v.pos, plyPos) <= 30 then
+				closestPickups[k] = { handle = v.handle, pos = v.pos }
+			elseif closestPickups[k] then
+				closestPickups[k] = nil
+			end
 		end
-	end
-
-	if pickupIndex then
-		TriggerServerEvent("BR:SendToServer", 3, { i = pickupIndex, pos = VectorToTable(GetPickupCoords(a)) })
 	end
 end
 
@@ -472,7 +479,7 @@ function BR:SetupMap(map)
 				SetBlipDisplay(blip, 5)
 				blips[#blips + 1] = blip
 			end
-			table.insert(allPickups, pickup)
+			table.insert(allPickups, { handle = pickup, pos = vec3(v[1], v[2], v[3]) })
 		end
 	end
 
@@ -607,18 +614,18 @@ AddEventHandler("BR:Event", function(eventID, _tbl)
 		BR.Spawn:SpawnPed()
 	elseif eventID == 8 and allPickups[_tbl.index] then
 		local pickup = allPickups[_tbl.index]
-		if pickup and DoesPickupExist(pickup) then
-			local pickupPos = _tbl.pos
-			print(pickupPos)
+		if pickup then
 			for k,v in pairs(blips) do
-				if DoesBlipExist(v) and GetDistanceBetweenCoords(GetBlipCoords(v), pickupPos.x, pickupPos.y, pickupPos.z) <= 1 then
-					print('here ?.')
+				if DoesBlipExist(v) and GetDistanceBetweenCoords(GetBlipCoords(v), pickup.pos) <= 1 then
 					RemoveBlip(v)
 					table.remove(blips, k)
 					break
 				end
 			end
-			RemovePickup(pickup)
+
+			if DoesPickupExist(pickup.handle) then
+				RemovePickup(pickup.handle)
+			end
 		end
 
 		if GetPlayerFromServerId(_tbl.receiver) == PlayerId() then
