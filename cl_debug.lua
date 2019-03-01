@@ -114,7 +114,7 @@ end
 
 function ShowAboveRadarMessageIcon(icon, intType, sender, title, text, back)
 	if type(icon) == "number" then
-		local ped = GetPlayerPed(GetPlayerFromServerId(icon))
+		local ped = GetPlayerPed(icon)
 		if ped then icon = GetPedHeashot(ped) end
 	end
 

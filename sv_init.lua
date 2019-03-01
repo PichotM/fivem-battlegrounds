@@ -108,8 +108,8 @@ end
 function BR:PlayerKilled(intSource, intKiller)
 	if not self.Players[intSource] then return end
 	self.Players[intSource] = nil
+	print("KILLER -> " .. intKiller .. " ( " .. GetPlayerName(intKiller) .. " ) WHERE SOURCE -> " .. intSource)
 	TriggerClientEvent("BR:Event", -1, 4, { killed = intSource, killer = intKiller })
-	print(intKiller)
 	if intKiller and self.Players[intKiller] then
 		print('updated')
 		SQL_Query("UPDATE br_players SET br_players.kills = br_players.kills + 1 WHERE br_players.hex = @hex", { ["hex"] = GetPlayerIdentifiers(intKiller)[1] })

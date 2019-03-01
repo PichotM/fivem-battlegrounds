@@ -452,7 +452,6 @@ function BR:EntityDamage(victimEntity, attackEntity, _, fatalBool, weaponUsed, _
 			Citizen.Wait(10000)
 			if not IsEntityDead(GetPlayerPed(-1)) then return end
 			self.Spawn:SpawnPed()
-			print("respawn player.")
 			if not InPlane and BR.Status == 1 and tableCount(BR.Players, 2) then
 				self:ToggleSpectatorMode(true)
 			end
@@ -584,12 +583,13 @@ AddEventHandler("BR:Event", function(eventID, _tbl)
 			killer = GetPlayerFromServerId(killer)
 			if killer and GetPlayerName(killer) then
 				killerName = GetPlayerName(killer)
-				ShowAboveRadarMessageIcon(1, 0, "Battle Royale", "~r~" .. tableCount(BR.Players) .. " player(s) remaining", "~b~" .. GetPlayerName(victim) .. "~w~ got killed by ~b~" .. killerName .. "~w~.")
+				print("VICTIM -> " .. tostring(victim))
+				ShowAboveRadarMessageIcon(victim, 0, "Battle Royale", "~r~" .. tableCount(BR.Players) .. " player(s) remaining", "~b~" .. GetPlayerName(victim) .. "~w~ got killed by ~b~" .. killerName .. "~w~.")
 				if killer == PlayerId() then
 					killCount = killCount + 1
 				end
 			else
-				ShowAboveRadarMessageIcon(1, 0, "Battle Royale", "~r~" .. tableCount(BR.Players) .. " player(s) remaining", "~b~" .. GetPlayerName(victim) .. "~w~ got killed.")
+				ShowAboveRadarMessageIcon(victim, 0, "Battle Royale", "~r~" .. tableCount(BR.Players) .. " player(s) remaining", "~b~" .. GetPlayerName(victim) .. "~w~ got killed.")
 			end
 
 			if killer == PlayerId() and BR.Status == 1 then
@@ -608,7 +608,7 @@ AddEventHandler("BR:Event", function(eventID, _tbl)
 		Citizen.Wait(3000)
 		local winnerPlayer = _tbl and GetPlayerFromServerId(_tbl)
 		if winnerPlayer and GetPlayerName(winnerPlayer) then
-			ShowAboveRadarMessageIcon(1, 0, "Battle Royale", "~g~TOP 1", "~b~" .. GetPlayerName(winnerPlayer) .. "~w~ won the game.")
+			ShowAboveRadarMessageIcon(winnerPlayer, 0, "Battle Royale", "~g~TOP 1", "~b~" .. GetPlayerName(winnerPlayer) .. "~w~ won the game.")
 		end
 
 		if winnerPlayer == PlayerId() then
