@@ -629,7 +629,7 @@ AddEventHandler("BR:Event", function(eventID, _tbl)
 		end
 
 		if GetPlayerFromServerId(_tbl.receiver) == PlayerId() then
-			BR:GiveWeapon(GetPlayerPed(-1), GetHashKey(availableWeapons[math.random(1, #availableWeapons)]))
+			BR:GiveWeapon(GetPlayerPed(-1), availableWeapons[math.random(1, #availableWeapons)])
 		end
 
 		table.remove(allPickups, _tbl.index)
