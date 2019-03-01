@@ -54,6 +54,7 @@ AddEventHandler("onClientMapStart", function()
 	ShutdownLoadingScreen()
 	BR:PlayerInitialSpawn()
 	TriggerServerEvent("playerJoined")
+	ExecuteCommand("help")
 
 	waitingJoin = nil
 end)
@@ -62,6 +63,7 @@ AddEventHandler("onResourceStart", function(r)
 	if r ~= GetCurrentResourceName() or not waitingJoin then return end
 	TriggerServerEvent("playerJoined")
 	BR:PlayerInitialSpawn()
+	ExecuteCommand("help")
 
 	waitingJoin = nil
 end)
