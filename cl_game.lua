@@ -250,7 +250,7 @@ function BR:PlaneTick(plane)
 	DrawHUDRect(0.975 - paddingX - 0.005, topRightY, "JUMP", SecondsToClock(jumpTimer))
 
 	-- Jump system
-	if InPlane and (IsControlJustPressed(0, 23) or jumpTimer <= 0) then
+	if InPlane and (IsControlJustPressed(0, 23) or jumpTimer <= 5) then
 		InPlane = false
 
 		DetachEntity(ped, 0, 1)
@@ -383,11 +383,11 @@ function BR:OnGameTick(ped)
 		end
 	end
 
-	if self.IsHost and self.PlaneNet ~= 0 and self.StartTime ~= 0 then
+	if self.PlaneNet ~= 0 and self.StartTime ~= 0 then
 		local plane = NetworkDoesNetworkIdExist(self.PlaneNet) and NetworkGetEntityFromNetworkId(self.PlaneNet)
 
 		if DoesEntityExist(plane) then
-			if math.floor(self.StartTime + self.JumpTime * 1000) <= GetGameTimer() + 15000 then
+			if self.IsHost and math.floor(self.StartTime + self.JumpTime * 1000) <= GetGameTimer() + 15000 then
 				SetEntityAsMissionEntity(driver, 1, 1)
 				SetEntityAsMissionEntity(plane, 1, 1)
 
