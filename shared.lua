@@ -31,7 +31,7 @@ BR.Maps = {}
 
 BR.WarmUP = 30
 BR.GameTime = 60 * 18
-BR.MinPlayers = 2
+BR.MinPlayers = 5
 
 
 function ChatNotif(a, b, c, color)

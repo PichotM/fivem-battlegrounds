@@ -25,7 +25,7 @@ end
 function GetPlayers()
 	local tbl = {}
 	for i = 0, 64 do
-		if NetworkIsPlayerActive(i) then
+		if NetworkIsPlayerActive(i) and GetPlayerPed(i) then
 			tbl[#tbl + 1] = i
 		end
 	end
