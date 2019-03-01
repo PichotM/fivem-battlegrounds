@@ -13,12 +13,12 @@ local allPickups = {}
 local blips = {}
 local closestPickups = {}
 local InPlane = false
+local topRightY = 0.07
 local killCount = 0
 local specPlayer = 0
 local viewCam
 local driver
 
-local topRightY = 0.07
 
 RegisterNetEvent("BR:UpdateData")
 AddEventHandler("BR:UpdateData", function(varName, varValue)
@@ -415,7 +415,7 @@ function BR:OnGameTick(ped)
 	HideHudComponentThisFrame(4)
 	HideHudComponentThisFrame(7)
 	HideHudComponentThisFrame(9)
-	HideHudComponentThisFrame(14)
+	-- HideHudComponentThisFrame(14)
 end
 
 function BR:GameTimer(ped)
