@@ -2,7 +2,7 @@ local IS_SERVER = IsDuplicityVersion()
 
 BR = BR or {}
 
-ENABLE_DEBUG = true
+ENABLE_DEBUG = false
 if not IS_SERVER then
 	BR.Blips = {}
 	BR.FormerZone = false
@@ -30,7 +30,7 @@ BR.Map = false
 BR.Maps = {}
 
 BR.WarmUP = 30
-BR.GameTime = 60 * 18
+BR.GameTime = 60 * 15
 BR.MinPlayers = 5
 
 

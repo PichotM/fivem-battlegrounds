@@ -32,6 +32,7 @@ function BR.Spawn:SpawnPlayer(ped)
 	ClearPedBloodDamage(ped)
 	FreezeEntityPosition(ped, false)
 	SetPedDefaultComponentVariation(ped)
+	SetPedRandomComponentVariation(ped, 1)
 	SetPedCanRagdoll(ped, true)
 	SetPedCanSwitchWeapon(ped, true)
 	SetPedMute(ped, false)
@@ -48,6 +49,7 @@ function BR.Spawn:SpawnPlayer(ped)
 end
 
 function BR:ToggleSpectatorMode(force)
+	print(tostring(force))
 	if force then
 		self.Status = 2
 		for k,v in pairs(self.Players) do
@@ -70,7 +72,7 @@ function BR.Spawn:SpawnPed()
 		NetworkResurrectLocalPlayer(GetEntityCoords(GetPlayerPed(-1)), 0.0)
 	end
 
-	local model = BR.Model
+	local model = BR.Model or GetRandomModel()
 	if model then
 		RequestAndWaitModel(model)
 		SetPlayerModel(PlayerId(), model)

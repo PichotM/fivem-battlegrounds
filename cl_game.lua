@@ -13,6 +13,7 @@ local allPickups = {}
 local blips = {}
 local closestPickups = {}
 local InPlane = false
+local killed = false
 local topRightY = 0.07
 local killCount = 0
 local specPlayer = 0
@@ -49,6 +50,7 @@ function BR:ResetGame()
 	killCount = 0
 	currentCam = 1
 	specPlayer = 0
+	killed = false
 	InPlane = false
 	viewCam = nil
 
@@ -56,11 +58,11 @@ function BR:ResetGame()
 		local plane = NetworkDoesNetworkIdExist(self.PlaneNet) and NetworkGetEntityFromNetworkId(self.PlaneNet)
 		if plane then
 			DeleteVehicle(plane)
-			self.PlaneNet = 0
 		end
 	end
 
 	self.IsHost = false
+	self.PlaneNet = false
 	self.StartTime = 0
 	self.Players = {}
 	self.Zone = false
@@ -260,6 +262,7 @@ function BR:PlaneTick(plane)
 		RenderScriptCams(0, 0, 0, 1, 0)
 		BR.Spawn:SpawnPlayer(ped)
 
+		ClearPedTasks(ped)
 		SetPedGadget(ped, GetHashKey("GADGET_PARACHUTE"), true)
 		GiveWeaponToPed(ped, GetHashKey("GADGET_PARACHUTE"), 1, false, true)
 	end
@@ -336,7 +339,7 @@ local function FindNextPlayer(left)
 end
 
 function BR:OnGameTick(ped)
-	if self.Status == 0 then
+	if self.Status == 0 and self.PlaneNet then
 		local paddingX, allPlayers = 0.0, tableCount(GetPlayers())
 		paddingX = DrawHUDRect(0.975, topRightY, "PLAYERS", tostring(allPlayers))
 		if self.StartTime and self.StartTime ~= 0 then
@@ -354,8 +357,8 @@ function BR:OnGameTick(ped)
 		DisableControlAction(0, 23, true)
 		DisableControlAction(0, 49, true)
 		DisableControlAction(0, 75, true)
-	else
-		local plane = InPlane and NetworkDoesNetworkIdExist(self.PlaneNet) and NetworkGetEntityFromNetworkId(self.PlaneNet)
+	elseif self.Status ~= 0 then
+		local plane = self.PlaneNet and InPlane and NetworkDoesNetworkIdExist(self.PlaneNet) and NetworkGetEntityFromNetworkId(self.PlaneNet)
 		if self.Status == 1 and InPlane then
 			self:PlaneTick(plane)
 		end
@@ -417,7 +420,28 @@ function BR:OnGameTick(ped)
 	HideHudComponentThisFrame(4)
 	HideHudComponentThisFrame(7)
 	HideHudComponentThisFrame(9)
+	RestorePlayerStamina(PlayerId(), 1.0)
 	-- HideHudComponentThisFrame(14)
+end
+
+local function PostKill(ped, attackEntity)
+	attackEntity = NetworkGetEntityKillerOfPlayer(PlayerId())
+	local killer = IsPedAPlayer(attackEntity) and attackEntity or GetEntityType(attackEntity) == 2 and IsPedAPlayer(GetPedInVehicleSeat(attackEntity, -1)) and GetPedInVehicleSeat(attackEntity, -1)
+	killer = killer and NetworkGetPlayerIndexFromPed(killer)
+	if BR.Status == 1 and BR.Players[PlayerId()] then
+		TriggerServerEvent("BR:SendToServer", 2, killer and GetPlayerServerId(killer) or false)
+	end
+
+	killed = true
+
+	Citizen.CreateThread(function()
+		Citizen.Wait(10000)
+		if not IsEntityDead(GetPlayerPed(-1)) then return end
+		BR.Spawn:SpawnPed()
+		if not InPlane and BR.Status == 0 and tableCount(BR.Players) >= 1 then
+			BR:ToggleSpectatorMode(true)
+		end
+	end)
 end
 
 function BR:GameTimer(ped)
@@ -437,6 +461,10 @@ function BR:GameTimer(ped)
 			self:ApplyFireDamage(ped, 2)
 		end
 
+		if IsEntityDead(ped) and not killed then
+			PostKill(ped)
+		end
+
 		for k,v in pairs(allPickups) do
 			if GetDistanceBetweenCoords(v.pos, plyPos) <= 30 then
 				closestPickups[k] = { handle = v.handle, pos = v.pos }
@@ -449,19 +477,8 @@ end
 
 function BR:EntityDamage(victimEntity, attackEntity, _, fatalBool, weaponUsed, _, _, _, _, _, entityType)
 	local ped = GetPlayerPed(-1)
-	print(fatalBool)
-	if ped and ped == victimEntity and fatalBool == 1 then
-		local killer = IsPedAPlayer(attackEntity) and attackEntity or GetEntityType(attackEntity) == 2 and IsPedAPlayer(GetPedInVehicleSeat(attackEntity, -1)) and GetPedInVehicleSeat(attackEntity, -1)
-		killer = killer and NetworkGetPlayerIndexFromPed(killer)
-		if BR.Status == 1 and BR.Players[PlayerId()] then TriggerServerEvent("BR:SendToServer", 2, killer and GetPlayerServerId(killer) or false) end
-		Citizen.CreateThread(function()
-			Citizen.Wait(10000)
-			if not IsEntityDead(GetPlayerPed(-1)) then return end
-			self.Spawn:SpawnPed()
-			if not InPlane and BR.Status == 1 and tableCount(BR.Players, 2) then
-				self:ToggleSpectatorMode(true)
-			end
-		end)
+	if ped and ped == victimEntity and fatalBool and fatalBool ~= 0 and not killed then
+		PostKill(victimEntity, attackEntity)
 	end
 end
 
@@ -578,6 +595,9 @@ AddEventHandler("BR:Event", function(eventID, _tbl)
 		SeatInPlane(plane)
 		CreatePlaneCam(plane)
 
+		NetworkSetFriendlyFireOption(true)
+    	SetCanAttackFriendly(PlayerPedId(), true, true)
+
 		DoScreenFadeIn(1000)
 	elseif eventID == 4 then
 		local victim, killer, killerName = _tbl.killed, _tbl.killer
@@ -585,8 +605,8 @@ AddEventHandler("BR:Event", function(eventID, _tbl)
 
 		BR.Players[victim] = nil
 
-		if killer then
-			killer = GetPlayerFromServerId(killer)
+		if victim then
+			killer = killer and GetPlayerFromServerId(killer)
 			if killer and GetPlayerName(killer) then
 				killerName = GetPlayerName(killer)
 				print("VICTIM -> " .. tostring(victim))

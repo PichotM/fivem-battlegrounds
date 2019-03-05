@@ -196,7 +196,6 @@ end
 
 -- unfortunately not that fast with pickups :(
 AddEventHandler("gameEventTriggered", function(name, Arguments)
-	print(name)
 	name = name:gsub("CEventNetwork", "")
 	if BR[name] then
 		BR[name](BR, table.unpack(Arguments))

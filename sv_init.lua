@@ -76,13 +76,14 @@ function BR:PlayerJoined(intSource)
 	print("User exist -> " .. json.encode(userExist))
 	connectedPlayers[intSource] = true
 	TriggerClientEvent("postJoin", intSource, userPack)
+	TriggerClientEvent("BR:UpdateData", intSource, { StartTime = self.StartTime })
 end
 
 function BR:PlayerDropped(intSource)
 	self:PlayerKilled(intSource)
 	for k,v in pairs(BR.Players) do
 		if v == intSource or not GetPlayerName(v) then
-			table.remove(BR.Players, k)
+			BR.Players[k] = nil
 		end
 	end
 
@@ -106,13 +107,17 @@ function BR:UpdateSharedVar(_tbl)
 end
 
 function BR:PlayerKilled(intSource, intKiller)
+	print("KILL " .. intSource)
 	if not self.Players[intSource] then return end
+	print('SUITE KILL? ' .. tostring(intKiller))
 	self.Players[intSource] = nil
 	TriggerClientEvent("BR:Event", -1, 4, { killed = intSource, killer = intKiller })
 	if intKiller and self.Players[intKiller] then
 		print('updated')
 		SQL_Query("UPDATE br_players SET br_players.kills = br_players.kills + 1 WHERE br_players.hex = @hex", { ["hex"] = GetPlayerIdentifiers(intKiller)[1] })
 	end
+
+	if true then return end
 
 	if tableCount(self.Players) <= 1 then
 		local winner = intSource
@@ -309,7 +314,7 @@ RegisterCommand("victory", function(intSource)
 end)
 
 RegisterCommand("topkill", function(intSource)
-	local resultSQL, str = SQL_QueryResult("SELECT * FROM br_players ORDER BY kills DESC LIMIT 10"), ""
+	local resultSQL, str = SQL_QueryResult("SELECT * FROM br_players ORDER BY kills DESC LIMIT 5"), ""
 	for k,v in pairs(resultSQL) do
 		str = str .. v.name .. " - " .. v.kills .. " players killed" .. (k == #resultSQL and "" or "\n")
 	end
@@ -317,7 +322,7 @@ RegisterCommand("topkill", function(intSource)
 end)
 
 RegisterCommand("topvictory", function(intSource)
-	local resultSQL, str = SQL_QueryResult("SELECT * FROM br_players ORDER BY victory DESC LIMIT 10"), ""
+	local resultSQL, str = SQL_QueryResult("SELECT * FROM br_players ORDER BY victory DESC LIMIT 5"), ""
 	for k,v in pairs(resultSQL) do
 		str = str .. v.name .. " - " .. v.kills .. " victories" .. (k == #resultSQL and "" or "\n")
 	end
@@ -325,5 +330,5 @@ RegisterCommand("topvictory", function(intSource)
 end)
 
 RegisterCommand("help", function(intSource)
-	ChatNotif(intSource, "Commands:\n/kill: shows your kill count\n/victory: shows your victory count\n/topkill: show the kill leaderboard\n/topvictory: show the victory leaderboard\n\n/skin: change to another skin.\n/saveskin: save your skin.")
+	ChatNotif(intSource, "Commands:\n/spectate: to spectate\n/kill: shows your kill count\n/victory: shows your victory count\n/topkill: show the kill leaderboard\n/topvictory: show the victory leaderboard\n\n/skin: change to another skin.\n/saveskin: save your skin.")
 end)
